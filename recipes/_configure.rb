@@ -39,7 +39,7 @@ template ::File.join(node.kafka.config_dir, 'server.properties') do
   end
 end
 
-if node.kafka.init_style = 'runit'
+if node.kafka.init_style == 'runit'
   runit_service 'kafka' do
     options({
       :main_class => 'kafka.Kafka',
