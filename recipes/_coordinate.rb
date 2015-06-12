@@ -4,8 +4,6 @@
 #
 include_recipe 'runit'
 
-service 'kafka' if node.kafka.init_style == 'runit'
-
 ruby_block 'coordinate-kafka-start' do
   block do
     Chef::Log.debug 'Default recipe to coordinate Kafka start is used'
@@ -18,4 +16,4 @@ service 'kafka' do
   provider kafka_init_opts[:provider]
   supports start: true, stop: true, restart: true, status: true
   action kafka_service_actions
-end
+end unless node.kafka.init_style == 'runit'
