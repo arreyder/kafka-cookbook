@@ -9,7 +9,11 @@ ruby_block 'coordinate-kafka-start' do
     Chef::Log.debug 'Default recipe to coordinate Kafka start is used'
   end
   action :nothing
-  notifies :restart, 'service[kafka]', :delayed
+  if node.kafka.init_style == 'runit'
+    notifies :restart, "runit_service['kafka']", :delayed
+  else
+    notifies :restart, 'service[kafka]', :delayed
+  end
 end
 
 service 'kafka' do
@@ -17,4 +21,3 @@ service 'kafka' do
   supports start: true, stop: true, restart: true, status: true
   action kafka_service_actions
 end
-
