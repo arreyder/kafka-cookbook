@@ -46,6 +46,9 @@ if node.kafka.init_style == 'runit'
       :port => node.kafka.broker.port,
       :user => node.kafka.user
     })
+    if restart_on_configuration_change?
+      notifies :create, 'ruby_block[coordinate-kafka-start]', :immediately
+    end
   end
 else
   template kafka_init_opts[:env_path] do
