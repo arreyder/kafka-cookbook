@@ -110,7 +110,11 @@ end
 
 def kafka_service_actions
   actions = [:enable]
-  actions << :start if start_automatically?
+  if kafka_init_style == 'runit'
+    actions << :restart if start_automatically?
+  else
+    actions << :start if start_automatically?
+  end
   actions
 end
 
