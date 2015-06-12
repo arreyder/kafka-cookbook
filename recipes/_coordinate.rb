@@ -2,6 +2,7 @@
 # Cookbook Name:: kafka
 # Recipe:: _coordinate
 #
+include_recipe 'runit'
 
 ruby_block 'coordinate-kafka-start' do
   block do
