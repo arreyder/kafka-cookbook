@@ -94,7 +94,7 @@ def kafka_init_opts
         'default' => 'runit/default.erb'
       })
       opts[:script_path] = '/tmp/kafka.service'
-      opts[:provider] = ::Chef::Provider::Service::RunitService
+      opts[:provider] = ::Chef::Provider::Service::Runit 
       opts[:permissions] = '644'
     end
   end
