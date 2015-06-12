@@ -2,6 +2,7 @@
 # Cookbook Name:: kafka
 # Recipe:: _configure
 #
+include_recipe 'runit'
 
 directory node.kafka.config_dir do
   owner node.kafka.user
