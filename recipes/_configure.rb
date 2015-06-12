@@ -2,6 +2,7 @@
 # Cookbook Name:: kafka
 # Recipe:: _configure
 #
+include_recipe 'runit'
 
 directory node.kafka.config_dir do
   owner node.kafka.user
@@ -38,36 +39,48 @@ template ::File.join(node.kafka.config_dir, 'server.properties') do
   end
 end
 
-template kafka_init_opts[:env_path] do
-  source kafka_init_opts.fetch(:env_template, 'env.erb')
-  owner 'root'
-  group 'root'
-  mode '644'
-  variables({
-    main_class: 'kafka.Kafka',
-  })
-  if restart_on_configuration_change?
-    notifies :create, 'ruby_block[coordinate-kafka-start]', :immediately
+if node.kafka.init_style == 'runit'
+  runit_service 'kafka' do
+    options({
+      :main_class => 'kafka.Kafka',
+      :port => node.kafka.broker.port,
+      :user => node.kafka.user
+    })
+    if restart_on_configuration_change?
+      notifies :create, 'ruby_block[coordinate-kafka-start]', :immediately
+    end
+  end
+else
+  template kafka_init_opts[:env_path] do
+    source kafka_init_opts.fetch(:env_template, 'env.erb')
+    owner 'root'
+    group 'root'
+    mode '644'
+    variables({
+      main_class: 'kafka.Kafka',
+    })
+    if restart_on_configuration_change?
+      notifies :create, 'ruby_block[coordinate-kafka-start]', :immediately
+    end
+  end
+
+  template kafka_init_opts[:script_path] do
+    source kafka_init_opts[:source]
+    owner 'root'
+    group 'root'
+    mode kafka_init_opts[:permissions]
+    variables({
+      daemon_name: 'kafka',
+      port: node.kafka.broker.port,
+      user: node.kafka.user,
+      env_path: kafka_init_opts[:env_path],
+    })
+    helper :controlled_shutdown_enabled? do
+      !!broker_attribute?(:controlled, :shutdown, :enable)
+    end
+    if restart_on_configuration_change?
+      notifies :create, 'ruby_block[coordinate-kafka-start]', :immediately
+    end
   end
 end
-
-template kafka_init_opts[:script_path] do
-  source kafka_init_opts[:source]
-  owner 'root'
-  group 'root'
-  mode kafka_init_opts[:permissions]
-  variables({
-    daemon_name: 'kafka',
-    port: node.kafka.broker.port,
-    user: node.kafka.user,
-    env_path: kafka_init_opts[:env_path],
-  })
-  helper :controlled_shutdown_enabled? do
-    !!broker_attribute?(:controlled, :shutdown, :enable)
-  end
-  if restart_on_configuration_change?
-    notifies :create, 'ruby_block[coordinate-kafka-start]', :immediately
-  end
-end
-
 include_recipe node.kafka.start_coordination.recipe

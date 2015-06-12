@@ -2,6 +2,7 @@
 # Cookbook Name:: kafka
 # Recipe:: _coordinate
 #
+include_recipe 'runit'
 
 ruby_block 'coordinate-kafka-start' do
   block do
@@ -15,5 +16,4 @@ service 'kafka' do
   provider kafka_init_opts[:provider]
   supports start: true, stop: true, restart: true, status: true
   action kafka_service_actions
-end
-
+end unless node.kafka.init_style == 'runit'
