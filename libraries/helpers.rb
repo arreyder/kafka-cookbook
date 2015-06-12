@@ -85,6 +85,17 @@ def kafka_init_opts
       opts[:script_path] = '/etc/systemd/system/kafka.service'
       opts[:provider] = ::Chef::Provider::Service::Systemd
       opts[:permissions] = '644'
+    when :runit
+      opts[:env_path] = value_for_platform_family({
+        'default' => '/tmp/kafka',
+      })
+      opts[:env_template] = 'systemd/kafka.env.erb'
+      opts[:source] = value_for_platform_family({
+        'default' => 'runit/default.erb'
+      })
+      opts[:script_path] = '/tmp/kafka.service'
+      opts[:provider] = ::Chef::Provider::Service::RunitService
+      opts[:permissions] = '644'
     end
   end
 end
