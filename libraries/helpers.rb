@@ -109,7 +109,7 @@ def restart_on_configuration_change?
 end
 
 def kafka_service_actions
-  actions = [:enable]
+  actions = [:enable] unless kafka_init_style == 'runit' 
   actions << :start if start_automatically?
   actions
 end
