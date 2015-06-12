@@ -2,7 +2,7 @@
 # Cookbook Name:: kafka
 # Recipe:: default
 #
-
+include_recipe 'runit'
 include_recipe 'kafka::_defaults'
 include_recipe 'kafka::_setup'
 include_recipe 'kafka::_install'
