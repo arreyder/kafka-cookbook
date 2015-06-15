@@ -85,6 +85,17 @@ def kafka_init_opts
       opts[:script_path] = '/etc/systemd/system/kafka.service'
       opts[:provider] = ::Chef::Provider::Service::Systemd
       opts[:permissions] = '644'
+    when :runit
+      opts[:env_path] = value_for_platform_family({
+        'default' => '/tmp/kafka',
+      })
+      opts[:env_template] = 'systemd/kafka.env.erb'
+      opts[:source] = value_for_platform_family({
+        'default' => 'runit/default.erb'
+      })
+      opts[:script_path] = '/tmp/kafka.service'
+      opts[:provider] = ::Chef::Provider::Service::Runit 
+      opts[:permissions] = '644'
     end
   end
 end
@@ -98,8 +109,9 @@ def restart_on_configuration_change?
 end
 
 def kafka_service_actions
-  actions = [:enable]
-  actions << :start if start_automatically?
+    actions = []
+    actions = [:enable] unless kafka.init_style == 'runit'
+    actions << :start if start_automatically?
   actions
 end
 

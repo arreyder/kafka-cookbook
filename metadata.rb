@@ -17,3 +17,5 @@ supports 'fedora'
 supports 'amazon'
 supports 'debian'
 supports 'ubuntu'
+
+depends 'runit'
