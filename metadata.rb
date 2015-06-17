@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-name             'tgt-kafka'
+name             'kafka'
 maintainer       'Mathias Söderberg'
 maintainer_email 'mths@sdrbrg.se'
 license          'Apache 2.0'
