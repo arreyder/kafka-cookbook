@@ -7,7 +7,7 @@ include_recipe 'kafka::_defaults'
 include_recipe 'kafka::_setup'
 include_recipe 'kafka::_install'
 
-directory node.mirror_maker.log_dir do
+directory node.kafka.log_dir do
   owner node.kafka.user
   group node.kafka.group
   mode '755'
@@ -15,7 +15,7 @@ directory node.mirror_maker.log_dir do
 end
 
 node.mirror_maker.consumers.each do |config_file, options|
-  template ::File.join(node.mirror_maker.config_dir, config_file) do
+  template ::File.join(node.kafka.install_dir, 'config', config_file) do
     source 'source_cluster_consumer.properties.erb'
     owner node.kafka.user
     group node.kafka.group
@@ -24,7 +24,7 @@ node.mirror_maker.consumers.each do |config_file, options|
   end
 end
 
-template ::File.join(node.mirror_maker.config_dir, node.mirror_maker.producer.config_file) do
+template ::File.join(node.kafka.install_dir, 'config', node.mirror_maker.producer.config_file) do
   source 'target_cluster_producer.properties.erb'
   owner node.kafka.user
   group node.kafka.group
