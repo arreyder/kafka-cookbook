@@ -7,8 +7,6 @@ include_attribute 'kafka::default'
 
 default.mirror_maker.log_dir = '/var/log/mirror_maker'
 default.mirror_maker.config_dir = node.kafka.config_dir
-default.mirror_maker.user = node.kafka.user
-default.mirror_maker.group = node.kafka.group
 default.mirror_maker.init_style = node.kafka.init_style
 default.mirror_maker.log4j_config = 'mirror_maker.log4j.properties'
 
