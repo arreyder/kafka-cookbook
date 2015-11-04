@@ -12,7 +12,6 @@ export KAFKA_RUN="<%= node.kafka.install_dir %>/bin/kafka-run-class.sh"
 export KAFKA_ARGS="<%= @options[:main_class] %>"
 export KAFKA_CONFIG="<%= node.kafka.config_dir %>/server.properties"
 
-
 <%= (node.kafka.ulimit_file.is_a? Integer) ? "ulimit -c unlimited -n #{node.kafka.ulimit_file}" : 'ulimit -c unlimited' %>
 echo "exec chpst -u <%= @options[:user] %> $KAFKA_RUN $KAFKA_ARGS $KAFKA_CONFIG"
 exec chpst -u <%= @options[:user] %> $KAFKA_RUN $KAFKA_ARGS $KAFKA_CONFIG 2>&1
