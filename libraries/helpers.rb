@@ -94,7 +94,7 @@ def kafka_init_opts
         'default' => 'runit/default.erb'
       })
       opts[:script_path] = '/tmp/kafka.service'
-      opts[:provider] = ::Chef::Provider::Service::Runit 
+      opts[:provider] = ::Chef::Provider::Service::Runit
       opts[:permissions] = '644'
     end
   end
@@ -110,7 +110,7 @@ end
 
 def kafka_service_actions
     actions = []
-    actions = [:enable] unless kafka.init_style == 'runit'
+    actions = [:enable] unless node.kafka.init_style == 'runit'
     actions << :start if start_automatically?
   actions
 end
