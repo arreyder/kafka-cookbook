@@ -7,8 +7,9 @@ unless broker_attribute?(:broker, :id)
   node.default.kafka.broker.broker_id = node.ipaddress.gsub('.', '').to_i % 2**31
 end
 
-unless broker_attribute?(:port)
-  node.default.kafka.broker.port = 6667
+# port property does not play nice with listeners property in kafka 0.9.*
+unless ( broker_attribute?(:port) || broker_attribute?(:listeners) )
+  node.default.kafka.broker.port = 9092 
 end
 
 unless node.kafka.gc_log_opts
