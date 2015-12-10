@@ -43,7 +43,6 @@ if node.kafka.init_style == 'runit'
   runit_service 'kafka' do
     options({
       :main_class => 'kafka.Kafka',
-      :port => node.kafka.broker.port,
       :user => node.kafka.user
     })
     if restart_on_configuration_change?
